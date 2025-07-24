@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/kidchat/static/css/main.c16b5494.css",
-    "main.js": "/kidchat/static/js/main.db8b9119.js",
+    "main.css": "/kidchat/static/css/main.5d1278d3.css",
+    "main.js": "/kidchat/static/js/main.d339eda1.js",
     "static/js/845.74c62bb2.chunk.js": "/kidchat/static/js/845.74c62bb2.chunk.js",
     "index.html": "/kidchat/index.html",
-    "main.c16b5494.css.map": "/kidchat/static/css/main.c16b5494.css.map",
-    "main.db8b9119.js.map": "/kidchat/static/js/main.db8b9119.js.map",
+    "main.5d1278d3.css.map": "/kidchat/static/css/main.5d1278d3.css.map",
+    "main.d339eda1.js.map": "/kidchat/static/js/main.d339eda1.js.map",
     "845.74c62bb2.chunk.js.map": "/kidchat/static/js/845.74c62bb2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c16b5494.css",
-    "static/js/main.db8b9119.js"
+    "static/css/main.5d1278d3.css",
+    "static/js/main.d339eda1.js"
   ]
 }
