@@ -2,12 +2,14 @@
   "name": "kidchat",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ywutian.github.io/kidchat",
   "dependencies": {
     "@deepgram/sdk": "^4.11.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^6.3.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.525.0",
     "marked": "^16.1.1",
@@ -22,7 +24,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
