@@ -162,20 +162,21 @@ function App() {
     setProfile(p);
     setProfileState(p);
   };
-  // prompt变量自动替换
-  const fillPromptVars = (prompt) => {
-    if (!profile) return prompt;
-    let res = prompt;
-    const age = calcAge(profile.birth);
-    res = res.replaceAll('{age}', age);
-    res = res.replaceAll('{gender}', profile.gender);
-    if (typeof chat.getSessionSummary === 'function') {
-      res = res.replaceAll('{memory}', chat.getSessionSummary());
+  // Replace fillPromptVars and sendMessageWithVars with object-safe logic
+  const fillPromptVars = (msg) => {
+    if (!msg || typeof msg !== 'object') return msg;
+    let res = { ...msg };
+    if (res.text && typeof res.text === 'string') {
+      const age = profile ? calcAge(profile.birth) : '';
+      res.text = res.text.replaceAll('{age}', age);
+      res.text = res.text.replaceAll('{gender}', profile?.gender || '');
+      if (typeof chat.getSessionSummary === 'function') {
+        res.text = res.text.replaceAll('{memory}', chat.getSessionSummary());
+      }
     }
     return res;
   };
-  // 包装 sendMessage
-  const sendMessageWithVars = (content) => chat.sendMessage(fillPromptVars(content));
+  const sendMessageWithVars = (msg) => chat.sendMessage(fillPromptVars(msg));
   return (
     <div className="h-screen w-screen flex bg-gradient-to-br from-blue-50 to-purple-100 overflow-hidden">
       <ProfilePrompt onSave={handleProfileSave} />

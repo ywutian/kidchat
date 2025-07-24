@@ -14,13 +14,17 @@ function safeMarkdown(text) {
 
 export default function MessageBubble({ message, onSpeak, isStreaming }) {
   const isUser = message.type === 'user';
-  // AI message uses Markdown rendering, user messages still use plain text
+  const text = message.text !== undefined ? message.text : message.content; // support both {text} and {content}
+  const image = message.image;
+
   const renderContent = (text) =>
     isUser
-      ? text.split(/\n/).map((line, i) => (
+      ? text && text.split(/\n/).map((line, i) => (
           <span key={i} style={{ display: 'block', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{line}</span>
         ))
-      : <span dangerouslySetInnerHTML={{ __html: safeMarkdown(text) }} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }} />;
+      : text
+        ? <span dangerouslySetInnerHTML={{ __html: safeMarkdown(text) }} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }} />
+        : null;
 
   return (
     <div className={`flex items-start ${isUser ? 'flex-row-reverse space-x-reverse' : ''} space-x-3 animate-fade-in`}>
@@ -32,14 +36,19 @@ export default function MessageBubble({ message, onSpeak, isStreaming }) {
       </div>
       {/* Bubble */}
       <div className={`max-w-2xl mx-2 ${isUser ? 'text-right' : ''}`}>
-        <div className={`p-4 rounded-2xl shadow-md transition-all duration-200 flex items-center gap-2 ${
+        <div className={`p-4 rounded-2xl shadow-md transition-all duration-200 flex flex-col gap-2 ${
           isUser
             ? 'bg-gradient-to-br from-indigo-400 to-purple-400 text-white rounded-br-md'
             : 'bg-white text-gray-800 rounded-tl-md border border-gray-100'
         } ${isStreaming ? 'animate-pulse' : ''}`}>
-          <span className="text-base leading-relaxed break-words flex-1">
-            {renderContent(message.content)}
-          </span>
+          {image && (
+            <img src={image} alt="uploaded" style={{ maxWidth: 240, maxHeight: 180, borderRadius: 12, marginBottom: text ? 8 : 0 }} />
+          )}
+          {text && (
+            <span className="text-base leading-relaxed break-words flex-1">
+              {renderContent(text)}
+            </span>
+          )}
           {!isUser && !isStreaming && (
             <button
               onClick={() => onSpeak && onSpeak(message)}

@@ -108,29 +108,53 @@ export default function useChat() {
   };
 
   const sendMessage = async (content, topic = null) => {
-    const userMsg = {
-      id: Date.now() + Math.random(),
-      content,
-      type: 'user',
-      topic,
-      timestamp: new Date().toISOString(),
-    };
+    // 兼容 { text, image } 或 string
+    let userMsgObj;
+    if (typeof content === 'object' && (content.text || content.image)) {
+      userMsgObj = {
+        id: Date.now() + Math.random(),
+        ...content,
+        type: 'user',
+        topic,
+        timestamp: new Date().toISOString(),
+      };
+    } else {
+      userMsgObj = {
+        id: Date.now() + Math.random(),
+        content: content,
+        type: 'user',
+        topic,
+        timestamp: new Date().toISOString(),
+      };
+    }
     setSessions(sessions => sessions.map(s =>
       s.id === activeSessionId
-        ? { ...s, messages: [...s.messages, userMsg] }
+        ? { ...s, messages: [...s.messages, userMsgObj] }
         : s
     ));
     setIsLoading(true);
     try {
-      let aiContent = await fetchGeminiResponse(content);
-      aiContent = filterContent(aiContent) + getRandomPositiveSuffix();
-      streamAIContent(aiContent, topic);
+      // 只将文本部分发给 AI
+      let aiContent;
+      if (typeof content === 'object' && content.text) {
+        aiContent = await fetchGeminiResponse(content.text);
+        aiContent = filterContent(aiContent) + getRandomPositiveSuffix();
+        streamAIContent(aiContent, topic);
+      } else if (typeof content === 'object' && content.image && !content.text) {
+        // 只有图片没有文本，AI无法识别
+        aiContent = "Sorry, I can't recognize images yet. Please enter text for me to help you!";
+        streamAIContent(aiContent, topic);
+      } else {
+        aiContent = await fetchGeminiResponse(content);
+        aiContent = filterContent(aiContent) + getRandomPositiveSuffix();
+        streamAIContent(aiContent, topic);
+      }
     } catch {
       setSessions(sessions => sessions.map(s =>
         s.id === activeSessionId
           ? { ...s, messages: [...s.messages, {
               id: Date.now() + Math.random(),
-              content: 'AI response failed, please try again later.',
+              content: "Sorry, I can't recognize images yet. Please enter text for me to help you!",
               type: 'bot',
               topic,
               timestamp: new Date().toISOString(),

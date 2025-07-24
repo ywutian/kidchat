@@ -4,7 +4,6 @@ import useChat from '../../hooks/useChat';
 
 export default function UsageStats({ overviewMode }) {
   const { sessions } = useChat();
-  // 统计今日消息数、活跃天数、学习话题数、学习时长
   const today = new Date().toISOString().slice(0, 10);
   let msgCount = 0;
   let activeDays = new Set();
@@ -17,10 +16,9 @@ export default function UsageStats({ overviewMode }) {
       if (m.topic) topicSet.add(m.topic);
     });
   });
-  // 假设每条消息平均1分钟，实际可用更精细统计
   totalMinutes = sessions.reduce((sum, s) => sum + s.messages.length, 0);
   const stats = [
-    { title: 'Today\'s Message Count', value: msgCount, icon: '💬', trend: '' },
+    { title: "Today's Message Count", value: msgCount, icon: '💬', trend: '' },
     { title: 'Active Days', value: activeDays.size, icon: '📅', trend: '' },
     { title: 'Learning Topics', value: topicSet.size, icon: '📚', trend: '' },
     { title: 'Learning Duration', value: `${totalMinutes} minutes`, icon: '⏰', trend: '' },

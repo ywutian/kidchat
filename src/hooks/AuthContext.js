@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
   const [role, setRole] = useState(() => localStorage.getItem('kidchat_auth') || 'kid');
   const [showPwdPrompt, setShowPwdPrompt] = useState(false);
 
-  // 切换角色，家长模式需密码
   const switchRole = (newRole) => {
     if (newRole === 'parent') {
       setShowPwdPrompt(true);
@@ -23,11 +22,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // 密码校验
   const verifyParentPwd = (inputPwd) => {
     const pwd = getParentPwd();
     if (!pwd) {
-      // 首次设置密码
       setParentPwd(inputPwd);
       setRole('parent');
       localStorage.setItem('kidchat_auth', 'parent');
