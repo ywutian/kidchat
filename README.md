@@ -49,15 +49,6 @@
 
 ---
 
-## Environment Variables
-
-- No special environment variables are required for basic usage.
-- If you want to enable Deepgram or other APIs, add your keys to a `.env` file:
-  ```
-  REACT_APP_DEEPGRAM_API_KEY=your_key_here
-  ```
-
----
 
 ## Default Topics & Parent Guides
 
